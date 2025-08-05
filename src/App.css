@@ -1,38 +1,243 @@
+/* 🎨 Paleta de colores basada en el logo */
+:root {
+  --color-primary: #00C6B4; /* del check del logo */
+  --color-dark: #003A54;    /* texto “i-BC” */
+  --color-text: #013249;    /* texto general */
+  --color-bg: #ffffff;      /* fondo blanco puro */
+  --color-back: #eaeaea;    /* fondo de la app suave */
+  --color-accent: #00b8a9;  /* acento variante */
+}
+
+/* 🌐 Estructura base */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--color-back);
+  color: var(--color-text);
+}
+
 .App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 20px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+main {
+  flex: auto;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
+/* 🔰 Header */
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  background-color: var(--color-bg);
+  padding: 16px 32px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  border-bottom: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.App-header img {
+  height: 48px;
+  margin-right: 12px;
+}
+
+.App-header h1 {
+  margin: 0;
+  color: var(--color-dark);
+  font-size: 24px;
+}
+
+/* 🔘 Botones */
+button {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: var(--color-accent);
+}
+
+/* 🧾 Inputs */
+input {
+  padding: 10px;
+  width: 280px;
+  margin-top: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* 📄 Sección estilo certificado */
+.descripcion-certificado {
+  background-color: var(--color-bg);
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 30px auto;
+  font-family: 'Segoe UI', sans-serif;
+  color: var(--color-text);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  text-align: left;
+}
+
+.nombre-certificado {
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-dark);
+}
+
+.detalle-certificado p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.fechas {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  border-top: 1px solid #eee;
+  padding-top: 16px;
+}
+
+.fechas div {
+  flex: 1;
+}
+
+.fechas strong {
+  display: block;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.fechas p {
+  margin: 0;
+  font-size: 14px;
+  color: #222;
+}
+
+/* 🦶 Footer */
+footer {
+  margin-top: 60px;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  background-color: var(--color-bg);
+  color: #666;
+}
+
+.verificacion {
+  margin-top: 30px;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fdfdfd;
+  border-top: 1px solid #eee; /* ✅ línea separadora arriba */
+  position: relative;
+}
+
+.verificacion::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background-color: #eee;
+}
+
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  z-index: 999;
 }
 
-.App-link {
-  color: #61dafb;
+.modal {
+  background: white;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  position: relative;
+  text-align: left;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.modal h3 {
+  margin-top: 0;
+  font-size: 18px;
+  color: var(--color-dark);
+}
+
+.modal p {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.modal code {
+  background: #f5f5f5;
+  padding: 4px 6px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: block;
+  margin-top: 4px;
+  word-break: break-all;
+}
+
+.cerrar {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  border: none;
+  background: var(--color-accent);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+
+.loading-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #00C6B4;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/* 🧨 Errores */
+.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
 }
