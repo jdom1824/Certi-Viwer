@@ -50,7 +50,7 @@ export default function Certificado({ cedula, setCedula, data, setData, error, s
 
       {!loading && data && (
         <div className="certificado">
-          <img src="/certificate.jpg" alt="Certificado base" className="fondo" />
+          <img src="/cert_ico2.jpg" alt="Certificado base" className="fondo" />
           <div className="datos">
             <p className="nombre">{data.name}</p>
             <p className="descripcion">{data.description}</p>
