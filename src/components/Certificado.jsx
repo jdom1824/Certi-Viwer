@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import axios from "axios";
 import "./Certificado.css";
 
@@ -13,7 +14,7 @@ export default function Certificado({ cedula, setCedula, data, setData, error, s
       setError("");
     } catch (err) {
       setData(null);
-      setError("No se encontró un certificado para esa cédula.");
+      setError("No se encontró un certificado para esa cédula o número catastral.");
     }
     setLoading(false);
   };
@@ -33,7 +34,7 @@ export default function Certificado({ cedula, setCedula, data, setData, error, s
       <h2>Buscar Certificado NFT</h2>
       <input
         type="text"
-        placeholder="Ingrese la cédula"
+        placeholder="Ingrese la cédula o número catastral."
         value={cedula}
         onChange={(e) => setCedula(e.target.value)}
       />
@@ -50,13 +51,16 @@ export default function Certificado({ cedula, setCedula, data, setData, error, s
 
       {!loading && data && (
         <div className="certificado">
-          <img src="/certificate.jpg" alt="Certificado base" className="fondo" />
-          <div className="datos">
-            <p className="nombre">{data.name}</p>
-            <p className="descripcion">{data.description}</p>
-            <p className="fecha">{data.fecha}</p>
-          </div>
+        <img src="/cert_ico2.jpg" alt="Certificado base" className="fondo" />
+        <div className="datos">
+          <p className="nombre">{data.name}</p>
+          <p className="descripcion">{data.description}</p>
+          <p className="fecha">{data.fecha}</p>
         </div>
+        <div className="qr-container">
+        <QRCodeSVG value={cedula || "https://token-mamus.web.app/?cedula=1203989"} size={45} />
+        </div>
+      </div>
       )}
     </div>
   );

@@ -15,6 +15,16 @@ button {
   cursor: pointer;
 }
 
+
+.qr-container {
+  position: absolute;
+  left: 52px;      
+  bottom: 66px;    
+  background: rgba(255, 255, 255, 0);
+  padding: 0px;
+  border-radius: 0px;
+}
+
 .certificado {
   position: relative;
   width: 100%;
@@ -24,7 +34,8 @@ button {
 
 .fondo {
   width: 100%;
-  display: block;
+  height: 100%;
+  object-fit: cover;
 }
 
 .datos {
