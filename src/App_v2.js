@@ -5,7 +5,11 @@ import "./App.css";
 
 function App() {
   const [cedula, setCedula] = useState("");
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({
+    name: "Finca Villa Natalia",
+    description: "No evidence of deforestation was detected between 2020 and 2024, according to the analysis of annual forest cover loss from “Global Forest Change” satellite imagery (30-meter resolution), processed through the i-CO2 platform.",
+    fecha: new Date().toISOString().slice(0, 10)
+  });
   const [error, setError] = useState("");
 
   return (
