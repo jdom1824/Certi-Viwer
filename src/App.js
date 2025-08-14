@@ -27,10 +27,9 @@ function App() {
         <Description data={data} />
       </main>
 
-    <footer>
-      © 2025 Conexalab · i-BC 5.0 · Blockchain Certification for Industry 5.0
-    </footer>
-
+      <footer>
+        © 2025 Conexalab · i-BC 5.0 · Blockchain Certification for Industry 5.0
+      </footer>
     </div>
   );
 }
