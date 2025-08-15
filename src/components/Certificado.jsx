@@ -9,7 +9,8 @@ export default function Certificado({ cedula, setCedula, data, setData, error, s
     setLoading(true);
     try {
       const res = await axios.get(`https://certic-44.duckdns.org/nft/${cedulaParam}`);
-      setData(res.data);
+      // ⬇️ Guardamos el snapshot de la cédula usada en la búsqueda
+      setData({ ...res.data, cedula: cedulaParam });
       setError("");
     } catch (err) {
       setData(null);
@@ -21,16 +22,22 @@ export default function Certificado({ cedula, setCedula, data, setData, error, s
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const cedulaURL = params.get("cedula");
-
     if (cedulaURL) {
       setCedula(cedulaURL);
       buscarCertificado(cedulaURL);
     }
   }, [setCedula]);
 
+  const getCertImage = () => {
+    if (!data?.cedula) return "/certificate.jpg";            
+    return data.cedula.length > 10 ? "/cert_ico2.jpg"   // 11+ dígitos
+                                   : "/certificate.jpg";  // 6–10 dígitos (ajustá a tu regla)
+  };
+
   return (
     <div className="cert-container">
       <h2>Buscar Certificado NFT</h2>
+
       <input
         type="text"
         placeholder="Ingrese la cédula"
@@ -50,7 +57,7 @@ export default function Certificado({ cedula, setCedula, data, setData, error, s
 
       {!loading && data && (
         <div className="certificado">
-          <img src="/certificate.jpg" alt="Certificado base" className="fondo" />
+          <img src={getCertImage()} alt="Certificado base" className="fondo" />
           <div className="datos">
             <p className="nombre">{data.name}</p>
             <p className="descripcion">{data.description}</p>
