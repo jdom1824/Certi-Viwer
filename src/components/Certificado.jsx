@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
+import QRCode from "react-qr-code";
 import "./Certificado.css";
 
 export default function Certificado({ cedula, setCedula, data, setData, error, setError }) {
   const [loading, setLoading] = useState(false);
 
-  const buscarCertificado = async (cedulaParam) => {
+  const buscarCertificado = useCallback(async (cedulaParam) => {
     setLoading(true);
     try {
       const res = await axios.get(`https://certic-44.duckdns.org/nft/${cedulaParam}`);
-      // ⬇️ Guardamos el snapshot de la cédula usada en la búsqueda
       setData({ ...res.data, cedula: cedulaParam });
       setError("");
     } catch (err) {
@@ -17,7 +17,8 @@ export default function Certificado({ cedula, setCedula, data, setData, error, s
       setError("No se encontró un certificado para esa cédula.");
     }
     setLoading(false);
-  };
+  }, [setData, setError]);
+
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -26,7 +27,7 @@ export default function Certificado({ cedula, setCedula, data, setData, error, s
       setCedula(cedulaURL);
       buscarCertificado(cedulaURL);
     }
-  }, [setCedula]);
+  }, [setCedula, buscarCertificado]);
 
   const getCertImage = () => {
     if (!data?.cedula) return "/certificate.jpg";            
@@ -46,23 +47,29 @@ export default function Certificado({ cedula, setCedula, data, setData, error, s
       />
       <button onClick={() => buscarCertificado(cedula)}>Buscar</button>
 
-      {loading && (
-        <div className="spinner-container">
-          <div className="spinner"></div>
-          <p>Generando certificado...</p>
-        </div>
-      )}
-
-      {error && <p className="error">{error}</p>}
-
       {!loading && data && (
         <div className="certificado">
           <img src={getCertImage()} alt="Certificado base" className="fondo" />
+
           <div className="datos">
             <p className="nombre">{data.name}</p>
             <p className="descripcion">{data.description}</p>
             <p className="fecha">{data.fecha}</p>
           </div>
+
+          {/* QR dinámico */}
+          {data?.cedula.length > 10 && (
+          <div className="qr-container">
+          <QRCode
+            value={`https://token-mamus.web.app/?cedula=${data.cedula}`}
+            size={256}                 // tamaño base grande (SVG)
+            level="H"
+            style={{ width: "100%", height: "100%" }}  // ⬅️ que lo escale el CSS
+            bgColor="#ffffff"
+            fgColor="#000000"
+            />
+          </div>
+          )}
         </div>
       )}
     </div>

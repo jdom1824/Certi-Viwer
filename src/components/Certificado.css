@@ -22,6 +22,28 @@ button {
   margin: 30px auto;
 }
 
+.certificado .qr-container { display: none; }
+
+/* Solo mostrar y posicionar en el template iCO2 (cuando uses la clase .ico2
+   o, si no usás esa clase, dejá la regla como está porque el JSX ya lo muestra
+   solo cuando hay 11+ dígitos). */
+.certificado .qr-container {
+  display: flex;                  /* visible solo cuando se renderiza en JSX */
+  position: absolute;
+  z-index: 3;
+
+  /* POSICIÓN dentro del certificado (ajustable):
+     Usé porcentaje para que escale con la imagen. */
+  left: 10.5%;                       /* mueve horizontalmente */
+  bottom: 17%;                    /* mueve verticalmente */
+  
+  /* TAMAÑO del QR (más chico): */
+  width: clamp(40px, 9%, 110px); /* 15% del ancho del certificado, con límites */
+  aspect-ratio: 1 / 1;
+
+}
+
+
 .fondo {
   width: 100%;
   display: block;
