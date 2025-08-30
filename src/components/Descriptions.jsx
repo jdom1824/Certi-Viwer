@@ -1,101 +1,121 @@
-import React, { useEffect, useState, useCallback } from "react";
-import axios from "axios";
-import QRCode from "react-qr-code";
-import "./Certificado.css";
-
-export default function Certificado({ cedula, setCedula, data, setData, error, setError }) {
+import { useState } from "react";
+export default function Description({ data }) {
+  const [showModal, setShowModal] = useState(false);
+  const [showCopyModal, setShowCopyModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);    
+  if (!data) return null;
 
-  const buscarCertificado = useCallback(async (cedulaParam) => {
-    // Validación simple
-    if (!cedulaParam || !cedulaParam.trim()) {
-      setData(null);
-      setError("Por favor ingrese una cédula.");
-      return;
-    }
+const copyToClipboard = () => {
+    navigator.clipboard.writeText(data.owner || "—")
+    setCopied(true);
+    setShowCopyModal(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+};
 
+  const handleVerify = () => {
     setLoading(true);
-    setError("");         // limpia error previo
-    setData(null);        // limpia datos previos mientras busca
-
-    try {
-      const res = await axios.get(`https://certic-44.duckdns.org/nft/${cedulaParam}`);
-      setData({ ...res.data, cedula: cedulaParam });
-    } catch (err) {
-      // Mensaje más específico si es 404
-      if (axios.isAxiosError(err) && err.response?.status === 404) {
-        setError("No se encontró un certificado para esa cédula.");
-      } else {
-        setError("Ocurrió un error al consultar el certificado. Intente nuevamente.");
-      }
-      setData(null);
-    } finally {
+    setShowModal(true);
+    setTimeout(() => {
       setLoading(false);
+    }, 5000);
+  };
+  
+  const handleGoToContract = () => {
+    const url = `https://basescan.org/token/${data.contract}?a=${encodeURIComponent(data.cedula)}`;
+    console.log("Opening URL:", url);
+    if (data.contract && data.cedula) {
+      window.open(url, "_blank"); 
     }
-  }, [setData, setError]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const cedulaURL = params.get("cedula");
-    if (cedulaURL) {
-      setCedula(cedulaURL);
-      buscarCertificado(cedulaURL);
-    }
-  }, [setCedula, buscarCertificado]);
-
-  const getCertImage = () => {
-    if (!data?.cedula) return "/certificate.jpg";
-    return data.cedula.length > 10 ? "/cert_ico2.jpg" : "/certificate.jpg";
+    setShowCopyModal(false);
   };
 
   return (
-    <div className="cert-container">
-      <h2>Buscar Certificado NFT</h2>
+    <section className="descripcion-certificado">
+      <h2 className="nombre-certificado">{data.name}</h2>
+      <div className="detalle-certificado">
+        <p>{data.description}</p>
 
-      <div className="form-row">
-        <input
-          type="text"
-          placeholder="Ingrese la cédula"
-          value={cedula}
-          onChange={(e) => setCedula(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && buscarCertificado(cedula)}
-        />
-        <button onClick={() => buscarCertificado(cedula)} disabled={loading}>
-          {loading ? "Buscando..." : "Buscar"}
-        </button>
-      </div>
-
-      {/* Mensaje de error visible cuando exista */}
-      {!loading && error && (
-        <p className="error" role="alert">{error}</p>
-      )}
-
-      {/* Resultado */}
-      {!loading && data && (
-        <div className="certificado">
-          <img src={getCertImage()} alt="Certificado base" className="fondo" />
-
-          <div className="datos">
-            <p className="nombre">{data.name}</p>
-            <p className="descripcion">{data.description}</p>
-            <p className="fecha">{data.fecha}</p>
+        <div className="fechas">
+          <div>
+            <strong>Issued on</strong>
+            <p>{data.fecha || "—"}</p>
           </div>
+          <div>
+            <strong>Expires on</strong>
+            <p>Does not expire</p>
+          </div>
+        </div>
 
-          {/* QR dinámico (solo si la cédula tiene 11+ dígitos) */}
-          {data?.cedula?.length > 10 && (
-            <div className="qr-container">
-              <QRCode
-                value={`https://token-mamus.web.app/?cedula=${data.cedula}`}
-                size={256}
-                level="H"
-                style={{ width: "100%", height: "100%" }}
-                bgColor="#ffffff"
-                fgColor="#000000"
-              />
+        <div className="verificacion">
+          <h3>Credential Verification</h3>
+          <ul>
+            <li>🪪 This credential is from a <strong>verified issuer</strong></li>
+            <li>🧿 Secured by Coinbase Blockchain</li>
+          </ul>
+          <div className="cred-actions">
+            <button className="verificar" onClick={handleVerify}>
+              Verify Credential
+            </button>
+            <button className="copiar-id" onClick={copyToClipboard}>
+            {copied ? "Copied 🧿" : "Copy ID"}
+            </button>
+          </div>
+        </div>
+
+        {showModal && (
+          <div className="modal-backdrop">
+            <div className="modal">
+              <button className="cerrar" onClick={() => setShowModal(false)}>✕</button>
+              <h3>Credential Verification</h3>
+
+              {loading ? (
+                <div className="loading-container">
+                  <div className="spinner"></div>
+                  <p>Verifying credential, please wait...</p>
+                </div>
+              ) : (
+                <>
+                  <p>
+                    <strong>{data.name}</strong> credential is <strong>verified</strong> 🔐.
+                  </p>
+                  <p>
+                    This credential was securely issued and anchored on the blockchain network by a trusted issuer.
+                  </p>
+                  <hr />
+                  <p>🧾 Verified by: <strong>Conexalab</strong></p>
+                  <p>🧿 Blockchain Secured</p>
+                  <p>
+                    <strong>Blockchain ID:</strong>
+                    <br />
+                    <code>{data.owner || "—"}</code>
+                  </p>
+                </>
+              )}
             </div>
-          )}
+          </div>
+        )}
+      </div>
+          {showCopyModal && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <button
+              className="cerrar"
+              onClick={() => setShowCopyModal(false)}
+            >
+              ✕
+            </button>
+            <h3>ID Copiado</h3>
+            <p>ID copied successfully. Do you want to view the contract on the blockchain?</p>
+            <div className="modal-actions">
+              <button onClick={handleGoToContract}>Yes, view contract</button>
+              <button onClick={() => setShowCopyModal(false)}>No, thanks</button>
+            </div>
+          </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }

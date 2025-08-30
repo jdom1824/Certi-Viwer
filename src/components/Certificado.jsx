@@ -45,8 +45,12 @@ export default function Certificado({ cedula, setCedula, data, setData, error, s
         value={cedula}
         onChange={(e) => setCedula(e.target.value)}
       />
-      <button onClick={() => buscarCertificado(cedula)}>Buscar</button>
-
+      <button onClick={() => buscarCertificado(cedula)} disabled={loading}>
+      {loading ? "Buscando..." : "Buscar"}
+      </button>
+      {!loading && error && (
+      <p className="error" role="alert">{error}</p>
+      )}
       {!loading && data && (
         <div className="certificado">
           <img src={getCertImage()} alt="Certificado base" className="fondo" />
